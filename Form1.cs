@@ -69,7 +69,6 @@ namespace DiskUsageAnalizer
 
             ConsumerClass.EventReceived += HandleDiskEvents;
 
-            Shown += (o, args) => InitGUI();
             Disposed += OnDisposed;
         }
 
@@ -129,6 +128,10 @@ namespace DiskUsageAnalizer
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
+            InitGUI();
+            listView1.DoubleBuffered(true);
+
             Ewt.genRTL(out _rtlHandle);
             if (Ewt.rtlStartTrace(_rtlHandle) != 0)
             {
