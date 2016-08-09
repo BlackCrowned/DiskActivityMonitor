@@ -9,26 +9,42 @@ namespace DiskUsageAnalizer
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Remoting.Messaging;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Timers;
 
     using Timer = System.Timers.Timer;
 
     public partial class Form1 : Form
     {
+        [Serializable]
+        private class Data
+
+        {
+            public ulong TotalBytesRead = 0;
+
+            public ulong TotalBytesWritten = 0;
+
+            public TimeSpan TotalTimeRunning = TimeSpan.Zero;
+
+            public List<CallbackData> CallbacksDataList = new List<CallbackData>();
+
+            public int Index = 0;
+        }
+
+        private static readonly int _maxHistorySize = 100000;
+
+        private static readonly int _maxOverflowBufferSize = _maxHistorySize / 2;
+
+        private Data _data;
 
         private IntPtr _rtlHandle;
 
-        private UInt64 _totalBytesRead;
-
-        private UInt64 _totalBytesWritten;
-
-        private TimeSpan _totalTimeRunning;
-
         private Timer _updateTotalTimeRunningTimer;
 
-        private Timer _updateListViewTimer;
+        private Timer _updateListView1Timer;
 
-        private List<ListViewItem> _itemBuffer;
+        private Dictionary<int, ListViewItem> _listViewItemCache;
 
         private static string _filePath;
 
@@ -38,53 +54,70 @@ namespace DiskUsageAnalizer
 
             _filePath = Properties.Settings.Default._filePath;
 
-            _totalBytesRead = 0;
-            _totalBytesWritten = 0;
-            _totalTimeRunning = TimeSpan.Zero;
-
-            _itemBuffer = new List<ListViewItem>();
+            _data = new Data();
 
             if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
             {
                 RestoreFromFile(new FileStream(_filePath, FileMode.Open));
             }
 
+            _updateListView1Timer = new Timer(500);
+            _updateListView1Timer.AutoReset = true;
+            _updateListView1Timer.Elapsed += UpdateListView1;
 
-            _updateListViewTimer = new Timer(500);
-            _updateListViewTimer.AutoReset = true;
-            _updateListViewTimer.Elapsed += UpdateListView;
-            _updateListViewTimer.Start();
+            listView1.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
 
             ConsumerClass.EventReceived += HandleDiskEvents;
 
+            Shown += (o, args) => InitGUI();
             Disposed += OnDisposed;
         }
 
-        private void UpdateListView(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void UpdateListView1(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            try
+            SafeInvokeUIThread(
+                               () =>
+                                   {
+                                       if (WindowState != FormWindowState.Minimized)
+                                       {
+                                           lock (_data)
+                                           {
+                                               if (_data.CallbacksDataList.Count == listView1.VirtualListSize) return;
+
+                                               if (_data.CallbacksDataList.Count > _maxHistorySize + _maxOverflowBufferSize)
+                                               {
+                                                   _data.CallbacksDataList.RemoveRange(0, _data.CallbacksDataList.Count - _maxHistorySize);
+                                                   listView1.VirtualListSize = _data.CallbacksDataList.Count;
+                                               }
+                                               else if (_data.CallbacksDataList.Count > _maxHistorySize)
+                                               {
+                                                   listView1.VirtualListSize = _maxHistorySize;
+                                               }
+                                               else
+                                               {
+                                                   listView1.VirtualListSize = _data.CallbacksDataList.Count;
+                                               }
+                                               if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
+                                           }
+                                       }
+                                   });
+        }
+
+        private void ListView1OnRetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs retrieveVirtualItemEventArgs)
+        {
+            CallbackData callbackData;
+            lock (_data)
             {
-                if (!IsDisposed && !Disposing)
-                    listView1.Invoke(
-                                     new MethodInvoker(
-                                         () =>
-                                         {
-                                             lock (_itemBuffer)
-                                             {
-                                                 if (_itemBuffer.Count > 0)
-                                                 {
-                                                     listView1.Items.AddRange(_itemBuffer.ToArray());
-                                                     if (WindowState != FormWindowState.Minimized) //Prevent NullReferenceException
-                                                         listView1.TopItem = _itemBuffer.Last();
-                                                     _itemBuffer.Clear();
-                                                 }
-                                             }
-                                         }));
+                callbackData = _data.CallbacksDataList[retrieveVirtualItemEventArgs.ItemIndex]; 
             }
-            catch (ObjectDisposedException)
-            {
-                //Ignore
-            }
+            var listViewItem = new ListViewItem(callbackData.Index.ToString());
+            listViewItem.SubItems.Add(callbackData.Time.ToLongTimeString());
+            listViewItem.SubItems.Add($"{callbackData.IssuingProcessName} ({callbackData.IssuingProcessId})");
+            listViewItem.SubItems.Add(Enum.GetName(typeof(DiskAction), callbackData.Action));
+            listViewItem.SubItems.Add(DisplayAsBytes(callbackData.TransferSize));
+            listViewItem.SubItems.Add(DisplayAsSeconds((double)callbackData.HighResResponseTime * 1 / ConsumerClass.PerformanceCounterFrequency));
+
+            retrieveVirtualItemEventArgs.Item = listViewItem;
         }
 
         protected override void OnClosing(CancelEventArgs eventArgs)
@@ -130,52 +163,38 @@ namespace DiskUsageAnalizer
 
         private void HandleDiskEvents(CallbackData callbackData)
         {
-
-            var listViewItem = new ListViewItem((listView1.Items.Count + _itemBuffer.Count).ToString());
-            listViewItem.SubItems.Add(callbackData.Time.ToLongTimeString());
             try
             {
-                listViewItem.SubItems.Add($"{Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName} ({callbackData.IssuingProcessId})");
+                callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
             }
             catch (ArgumentException)
             {
-                listViewItem.SubItems.Add(callbackData.IssuingProcessId.ToString());
+                callbackData.IssuingProcessName = "";
             }
-            
-            listViewItem.SubItems.Add(Enum.GetName(typeof(DiskAction), callbackData.Action));
-            listViewItem.SubItems.Add(DisplayAsBytes(callbackData.TransferSize));
-            listViewItem.SubItems.Add(DisplayAsSeconds((double)callbackData.HighResResponseTime * 1 / ConsumerClass.PerformanceCounterFrequency));
-
-            lock (_itemBuffer)
+            lock (_data)
             {
-                _itemBuffer.Add(listViewItem); 
+                callbackData.Index = _data.Index++;
+                _data.CallbacksDataList.Add(callbackData);
             }
 
-            try
-            {
-                if (!IsDisposed && !Disposing)
-                    listView1.Invoke(
-                                     new MethodInvoker(
-                                         () =>
-                                             {
-                                                 switch (callbackData.Action)
-                                                 {
-                                                     case DiskAction.Read:
-                                                         _totalBytesRead += callbackData.TransferSize;
-                                                         textBox1.Text = DisplayAsBytes(_totalBytesRead);
-                                                         break;
-                                                     case DiskAction.Write:
-                                                         _totalBytesWritten += callbackData.TransferSize;
-                                                         textBox2.Text = DisplayAsBytes(_totalBytesWritten);
-                                                         break;
-                                                 }
-                                             }));
-            }
-            catch (ObjectDisposedException)
-            {
-                //Ignore
-            }
-
+            SafeInvokeUIThread(
+                               delegate
+                                   {
+                                       lock (_data)
+                                       {
+                                           switch (callbackData.Action)
+                                           {
+                                               case DiskAction.Read:
+                                                   _data.TotalBytesRead += callbackData.TransferSize;
+                                                   textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
+                                                   break;
+                                               case DiskAction.Write:
+                                                   _data.TotalBytesWritten += callbackData.TransferSize;
+                                                   textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
+                                                   break;
+                                           }
+                                       }
+                                   });
         }
 
         private static string DisplayAsBytes(ulong bytes)
@@ -184,26 +203,26 @@ namespace DiskUsageAnalizer
             double converted = 0;
             if (bytes > Math.Pow(2, 80))
             {
-                prefix = "T";
+                prefix = "Ti";
                 converted = bytes / Math.Pow(2, 80);
             }
             else if (bytes > Math.Pow(2, 40))
             {
-                prefix = "G";
+                prefix = "Gi";
                 converted = bytes / Math.Pow(2, 40);
             }
             else if (bytes > Math.Pow(2, 20))
             {
-                prefix = "M";
+                prefix = "Mi";
                 converted = bytes / Math.Pow(2, 20);
             }
             else if (bytes > Math.Pow(2, 10))
             {
-                prefix = "K";
+                prefix = "Ki";
                 converted = bytes / Math.Pow(2, 10);
             }
-            
-            return $"{converted:0.00} {prefix}iB";
+
+            return $"{converted:0.00} {prefix}B";
         }
 
         private static string DisplayAsSeconds(double seconds)
@@ -230,24 +249,34 @@ namespace DiskUsageAnalizer
 
         private void UpdateTotalTimeRunning(object sender, ElapsedEventArgs elapsedEventArgs)
         {
-            _totalTimeRunning += TimeSpan.FromSeconds(1);
+            _data.TotalTimeRunning += TimeSpan.FromSeconds(1);
+            SafeInvokeUIThread(
+                               delegate
+                                   {
+                                       lock (_data)
+                                       {
+                                           textBox3.Text = new DateTime(_data.TotalTimeRunning.Ticks).ToLongTimeString();
+                                       }
+                                   });
+        }
+
+        private void SafeInvokeUIThread(MethodInvoker target)
+        {
             try
             {
-                if (!IsDisposed && !Disposing)
+                if (!IsDisposed && !Disposing && IsHandleCreated)
                 {
-                    textBox3.Invoke(
-                                    new MethodInvoker(
-                                        delegate
-                                            {
-                                                textBox3.Text = new DateTime(_totalTimeRunning.Ticks).ToLongTimeString();
-                                            }));
+                    Invoke(target);
+                }
+                else if (!IsDisposed && !Disposing && !IsHandleCreated)
+                {
+                    Shown += (sender, args) => target.Invoke();
                 }
             }
             catch (ObjectDisposedException)
             {
                 //Ignore
             }
-
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,7 +286,7 @@ namespace DiskUsageAnalizer
 
         private void Save()
         {
-            if (!String.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
+            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
             {
                 SaveToFile(new FileStream(_filePath, FileMode.Truncate));
             }
@@ -269,7 +298,7 @@ namespace DiskUsageAnalizer
 
         private static Stream ShowSaveFileDialog()
         {
-            var fileDialog = new SaveFileDialog { CreatePrompt = false, OverwritePrompt = true, DefaultExt = "txt", Filter = "Text files|*.txt|All files|*.*" };
+            var fileDialog = new SaveFileDialog { CreatePrompt = false, OverwritePrompt = true, DefaultExt = "txt", Filter = "Data files|*.dat|Text files|*.txt|All files|*.*" };
             var result = fileDialog.ShowDialog();
 
             if (result == DialogResult.Cancel)
@@ -289,12 +318,8 @@ namespace DiskUsageAnalizer
             {
                 return;
             }
-
             fileStream.SetLength(0);
             fileStream.Flush();
-
-            var streamWriter = new StreamWriter(fileStream);
-            streamWriter.AutoFlush = false;
 
             if (!fileStream.CanWrite)
             {
@@ -302,21 +327,14 @@ namespace DiskUsageAnalizer
                 return;
             }
 
-            streamWriter.WriteLine($"_totalBytesRead-{_totalBytesRead}");
-            streamWriter.WriteLine($"_totalBytesWritten-{_totalBytesWritten}");
-            streamWriter.WriteLine($"_totalTimeRunning-{_totalTimeRunning}");
+            var formatter = new BinaryFormatter();
 
-            foreach (ListViewItem listItem in listView1.Items)
+            lock (_data)
             {
-                streamWriter.Write("listViewEntries");
-                foreach (ListViewItem.ListViewSubItem subItem in listItem.SubItems)
-                {
-                    streamWriter.Write("-" + subItem.Text);
-                }
-                streamWriter.WriteLine();
+                formatter.Serialize(fileStream, _data);
             }
 
-            streamWriter.Close();
+            fileStream.Close();
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
@@ -366,48 +384,34 @@ namespace DiskUsageAnalizer
         private void RestoreFromFile(Stream fileStream)
         {
             if (fileStream == null) return;
-            if (!fileStream.CanRead) return;
-
-            var streamReader = new StreamReader(fileStream);
-
-
-            lock (_itemBuffer)
+            if (!fileStream.CanRead)
             {
-                while (!streamReader.EndOfStream)
-                {
-                    var line = streamReader.ReadLine();
-                    if (string.IsNullOrEmpty(line)) continue;
-                    var selector = line.Substring(0, line.IndexOf('-'));
-                    line = line.Remove(0, line.IndexOf('-') + 1);
-                    var data = line.Split('-');
-
-                    if (selector == "listViewEntries")
-                    {
-                        var listViewItem = new ListViewItem(data[0]);
-                        for (var i = 1; i < data.Length; i++)
-                        {
-                            listViewItem.SubItems.Add(data[i]);
-                        }
-                        _itemBuffer.Add(listViewItem);
-                    }
-                    else if (selector == "_totalBytesRead")
-                    {
-                        _totalBytesRead = ulong.Parse(data[0]);
-                        textBox1.Text = DisplayAsBytes(_totalBytesRead);
-                    }
-                    else if (selector == "_totalBytesWritten")
-                    {
-                        _totalBytesWritten = ulong.Parse(data[0]);
-                        textBox2.Text = DisplayAsBytes(_totalBytesWritten);
-                    }
-                    else if (selector == "_totalTimeRunning")
-                    {
-                        _totalTimeRunning = TimeSpan.Parse(data[0]);
-                        textBox3.Text = new DateTime(_totalTimeRunning.Ticks).ToLongTimeString();
-                    }
-                } 
+                MessageBox.Show("Insufficient rights!", "Reading from file failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            streamReader.Close();
+
+            var formatter = new BinaryFormatter();
+            lock (_data)
+            {
+                _data = (Data)formatter.Deserialize(fileStream);
+            }
+
+            fileStream.Close();
+
+            SafeInvokeUIThread(InitGUI);
+        }
+
+        private void InitGUI()
+        {
+            lock (_data)
+            {
+                listView1.VirtualListSize = _data.CallbacksDataList.Count;
+                if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
+                textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
+                textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
+                textBox3.Text = new DateTime(_data.TotalTimeRunning.Ticks).ToLongTimeString();
+            }
+            _updateListView1Timer.Start();
         }
 
         private static Stream ShowOpenFileDialog()
@@ -419,8 +423,8 @@ namespace DiskUsageAnalizer
                                      ReadOnlyChecked = true,
                                      ShowReadOnly = true,
                                      DefaultExt = "txt",
-                                     Filter = "Text files|*.txt|All files|*.*"
-                                 };
+                                     Filter = "Data files|*.dat|Text files|*.txt|All files|*.*"
+            };
 
             var result = fileDialog.ShowDialog();
 
@@ -440,7 +444,7 @@ namespace DiskUsageAnalizer
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DiskUsage Analizer\n(c) 2016", "DiskUsageAnalizer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DiskUsage Analizer\n(c) 2016 Michael M.", "DiskUsageAnalizer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void showConsoleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -457,10 +461,20 @@ namespace DiskUsageAnalizer
             textBox2.Text = "0 B";
             textBox3.Text = "00:00:00";
 
-            _totalBytesRead = 0;
-            _totalBytesWritten = 0;
-            _totalTimeRunning = TimeSpan.Zero;
+            _data = new Data();
+            _listViewItemCache = new Dictionary<int, ListViewItem>();
+
             _filePath = string.Empty;
+
+            InitGUI();
+        }
+
+        private void addSomeEntriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                HandleDiskEvents(new CallbackData() { Action = DiskAction.Read, TransferSize = 0, IssuingProcessName = "Debug", IssuingProcessId = i });
+            }
         }
     }
 }
