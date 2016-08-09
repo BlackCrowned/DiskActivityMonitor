@@ -8,22 +8,198 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DiskUsageAnalizer.Properties
-{
-
-
+namespace DiskUsageAnalizer.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("34")]
+        public int listView1Header1_Width {
+            get {
+                return ((int)(this["listView1Header1_Width"]));
+            }
+            set {
+                this["listView1Header1_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int listView1Header6_Width {
+            get {
+                return ((int)(this["listView1Header6_Width"]));
+            }
+            set {
+                this["listView1Header6_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("97")]
+        public int listView1Header2_Width {
+            get {
+                return ((int)(this["listView1Header2_Width"]));
+            }
+            set {
+                this["listView1Header2_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int listView1Header3_Width {
+            get {
+                return ((int)(this["listView1Header3_Width"]));
+            }
+            set {
+                this["listView1Header3_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("63")]
+        public int listView1Header4_Width {
+            get {
+                return ((int)(this["listView1Header4_Width"]));
+            }
+            set {
+                this["listView1Header4_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("72")]
+        public int listView1Header5_Width {
+            get {
+                return ((int)(this["listView1Header5_Width"]));
+            }
+            set {
+                this["listView1Header5_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point Form1_Location {
+            get {
+                return ((global::System.Drawing.Point)(this["Form1_Location"]));
+            }
+            set {
+                this["Form1_Location"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("576, 365")]
+        public global::System.Drawing.Size Form1_ClientSize {
+            get {
+                return ((global::System.Drawing.Size)(this["Form1_ClientSize"]));
+            }
+            set {
+                this["Form1_ClientSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string _filePath {
+            get {
+                return ((string)(this["_filePath"]));
+            }
+            set {
+                this["_filePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("435, 27")]
+        public global::System.Drawing.Point groupBox2_Location {
+            get {
+                return ((global::System.Drawing.Point)(this["groupBox2_Location"]));
+            }
+            set {
+                this["groupBox2_Location"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("141, 326")]
+        public global::System.Drawing.Size groupBox2_Size {
+            get {
+                return ((global::System.Drawing.Size)(this["groupBox2_Size"]));
+            }
+            set {
+                this["groupBox2_Size"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("13, 27")]
+        public global::System.Drawing.Point groupBox1_Location {
+            get {
+                return ((global::System.Drawing.Point)(this["groupBox1_Location"]));
+            }
+            set {
+                this["groupBox1_Location"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("416, 326")]
+        public global::System.Drawing.Size groupBox1_Size {
+            get {
+                return ((global::System.Drawing.Size)(this["groupBox1_Size"]));
+            }
+            set {
+                this["groupBox1_Size"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6, 19")]
+        public global::System.Drawing.Point listbox1_Location {
+            get {
+                return ((global::System.Drawing.Point)(this["listbox1_Location"]));
+            }
+            set {
+                this["listbox1_Location"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("404, 301")]
+        public global::System.Drawing.Size listbox1_Size {
+            get {
+                return ((global::System.Drawing.Size)(this["listbox1_Size"]));
+            }
+            set {
+                this["listbox1_Size"] = value;
             }
         }
     }

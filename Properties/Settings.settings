@@ -1,7 +1,51 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DiskUsageAnalizer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="listView1Header1_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">34</Value>
+    </Setting>
+    <Setting Name="listView1Header6_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="listView1Header2_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">97</Value>
+    </Setting>
+    <Setting Name="listView1Header3_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="listView1Header4_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">63</Value>
+    </Setting>
+    <Setting Name="listView1Header5_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">72</Value>
+    </Setting>
+    <Setting Name="Form1_Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="Form1_ClientSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">576, 365</Value>
+    </Setting>
+    <Setting Name="_filePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="groupBox2_Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">435, 27</Value>
+    </Setting>
+    <Setting Name="groupBox2_Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">141, 326</Value>
+    </Setting>
+    <Setting Name="groupBox1_Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">13, 27</Value>
+    </Setting>
+    <Setting Name="groupBox1_Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">416, 326</Value>
+    </Setting>
+    <Setting Name="listbox1_Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">6, 19</Value>
+    </Setting>
+    <Setting Name="listbox1_Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">404, 301</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
