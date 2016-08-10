@@ -136,7 +136,7 @@ namespace DiskUsageAnalizer
         private void OnDisposed(object sender, EventArgs eventArgs)
         {
             Properties.Settings.Default._filePath = _filePath;
-            Properties.Settings.Default.Form1_ClientSize = ClientSize;
+            Properties.Settings.Default.Form1_ClientSize = Size;
             Properties.Settings.Default.Form1_Location = Location;
             Properties.Settings.Default.groupBox1_Location = groupBox1.Location;
             Properties.Settings.Default.groupBox1_Size = groupBox1.Size;
@@ -469,6 +469,11 @@ namespace DiskUsageAnalizer
             {
                 HandleDiskEvents(new CallbackData() { Action = DiskAction.Read, TransferSize = 0, IssuingProcessName = "Debug", IssuingProcessId = i });
             }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
