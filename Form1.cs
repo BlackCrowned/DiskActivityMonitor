@@ -165,6 +165,11 @@ namespace DiskUsageAnalizer
             {
                 callbackData.IssuingProcessName = "Unknown";
             }
+            catch
+            {
+                callbackData.IssuingProcessName = "Unknown";
+                //TODO Log error
+            }
             lock (_data)
             {
                 callbackData.Index = _data.Index++;
@@ -195,22 +200,22 @@ namespace DiskUsageAnalizer
         {
             string prefix = "";
             double converted = 0;
-            if (bytes > Math.Pow(2, 40))
+            if (bytes >= Math.Pow(2, 40))
             {
                 prefix = "Ti";
                 converted = bytes / Math.Pow(2, 40);
             }
-            else if (bytes > Math.Pow(2, 30))
+            else if (bytes >= Math.Pow(2, 30))
             {
                 prefix = "Gi";
                 converted = bytes / Math.Pow(2, 30);
             }
-            else if (bytes > Math.Pow(2, 20))
+            else if (bytes >= Math.Pow(2, 20))
             {
                 prefix = "Mi";
                 converted = bytes / Math.Pow(2, 20);
             }
-            else if (bytes > Math.Pow(2, 10))
+            else if (bytes >= Math.Pow(2, 10))
             {
                 prefix = "Ki";
                 converted = bytes / Math.Pow(2, 10);
