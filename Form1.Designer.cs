@@ -56,10 +56,11 @@
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addSomeEntriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addSomeEntriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -88,6 +89,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
+            this.columnHeader7,
             this.columnHeader6,
             this.columnHeader2,
             this.columnHeader3,
@@ -220,7 +222,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(576, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(612, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -317,6 +319,13 @@
             this.showConsoleToolStripMenuItem.Text = "Show Console";
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
             // 
+            // addSomeEntriesToolStripMenuItem
+            // 
+            this.addSomeEntriesToolStripMenuItem.Name = "addSomeEntriesToolStripMenuItem";
+            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.addSomeEntriesToolStripMenuItem.Text = "Add some Entries";
+            this.addSomeEntriesToolStripMenuItem.Click += new System.EventHandler(this.addSomeEntriesToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -340,12 +349,10 @@
             this.infoToolStripMenuItem.Text = "About DiskUsage Analizer";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
-            // addSomeEntriesToolStripMenuItem
+            // columnHeader7
             // 
-            this.addSomeEntriesToolStripMenuItem.Name = "addSomeEntriesToolStripMenuItem";
-            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.addSomeEntriesToolStripMenuItem.Text = "Add some Entries";
-            this.addSomeEntriesToolStripMenuItem.Click += new System.EventHandler(this.addSomeEntriesToolStripMenuItem_Click);
+            this.columnHeader7.Text = "Disk #";
+            this.columnHeader7.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header7_Width;
             // 
             // Form1
             // 
@@ -407,6 +414,7 @@
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addSomeEntriesToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
     }
 }
 

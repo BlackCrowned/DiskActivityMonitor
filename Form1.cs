@@ -61,8 +61,7 @@ namespace DiskUsageAnalizer
                 RestoreFromFile(new FileStream(_filePath, FileMode.Open));
             }
 
-            _updateListView1Timer = new Timer(500);
-            _updateListView1Timer.AutoReset = true;
+            _updateListView1Timer = new Timer(500) { AutoReset = true };
             _updateListView1Timer.Elapsed += UpdateListView1;
 
             listView1.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
@@ -77,27 +76,19 @@ namespace DiskUsageAnalizer
             SafeInvokeUIThread(
                                () =>
                                    {
-                                       if (WindowState != FormWindowState.Minimized)
-                                       {
-                                           lock (_data)
-                                           {
-                                               if (_data.CallbacksDataList.Count == listView1.VirtualListSize) return;
+                                       if (WindowState == FormWindowState.Minimized) return;
 
-                                               if (_data.CallbacksDataList.Count > _maxHistorySize + _maxOverflowBufferSize)
-                                               {
-                                                   _data.CallbacksDataList.RemoveRange(0, _data.CallbacksDataList.Count - _maxHistorySize);
-                                                   listView1.VirtualListSize = _data.CallbacksDataList.Count;
-                                               }
-                                               else if (_data.CallbacksDataList.Count > _maxHistorySize)
-                                               {
-                                                   listView1.VirtualListSize = _maxHistorySize;
-                                               }
-                                               else
-                                               {
-                                                   listView1.VirtualListSize = _data.CallbacksDataList.Count;
-                                               }
-                                               if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
+                                       lock (_data)
+                                       {
+                                           if (_data.CallbacksDataList.Count == listView1.VirtualListSize) return;
+
+                                           if (_data.CallbacksDataList.Count > _maxHistorySize + _maxOverflowBufferSize)
+                                           {
+                                               _data.CallbacksDataList.RemoveRange(0, _data.CallbacksDataList.Count - _maxHistorySize);
                                            }
+
+                                           listView1.VirtualListSize = _data.CallbacksDataList.Count;
+                                           if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
                                        }
                                    });
         }
@@ -110,6 +101,7 @@ namespace DiskUsageAnalizer
                 callbackData = _data.CallbacksDataList[retrieveVirtualItemEventArgs.ItemIndex]; 
             }
             var listViewItem = new ListViewItem(callbackData.Index.ToString());
+            listViewItem.SubItems.Add(callbackData.DiskNumber.ToString());
             listViewItem.SubItems.Add(callbackData.Time.ToLongTimeString());
             listViewItem.SubItems.Add($"{callbackData.IssuingProcessName} ({callbackData.IssuingProcessId})");
             listViewItem.SubItems.Add(Enum.GetName(typeof(DiskAction), callbackData.Action));
@@ -160,6 +152,8 @@ namespace DiskUsageAnalizer
             Properties.Settings.Default.listView1Header3_Width = columnHeader3.Width;
             Properties.Settings.Default.listView1Header4_Width = columnHeader4.Width;
             Properties.Settings.Default.listView1Header5_Width = columnHeader5.Width;
+            Properties.Settings.Default.listView1Header6_Width = columnHeader6.Width;
+            Properties.Settings.Default.listView1Header7_Width = columnHeader7.Width;
             Properties.Settings.Default.Save();
             Ewt.deleteRTL(ref _rtlHandle);
         }

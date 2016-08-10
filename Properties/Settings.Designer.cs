@@ -133,7 +133,7 @@ namespace DiskUsageAnalizer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("435, 27")]
+        [global::System.Configuration.DefaultSettingValueAttribute("471, 27")]
         public global::System.Drawing.Point groupBox2_Location {
             get {
                 return ((global::System.Drawing.Point)(this["groupBox2_Location"]));
@@ -169,7 +169,7 @@ namespace DiskUsageAnalizer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("416, 326")]
+        [global::System.Configuration.DefaultSettingValueAttribute("452, 326")]
         public global::System.Drawing.Size groupBox1_Size {
             get {
                 return ((global::System.Drawing.Size)(this["groupBox1_Size"]));
@@ -193,13 +193,25 @@ namespace DiskUsageAnalizer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("404, 301")]
+        [global::System.Configuration.DefaultSettingValueAttribute("440, 301")]
         public global::System.Drawing.Size listbox1_Size {
             get {
                 return ((global::System.Drawing.Size)(this["listbox1_Size"]));
             }
             set {
                 this["listbox1_Size"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("48")]
+        public int listView1Header7_Width {
+            get {
+                return ((int)(this["listView1Header7_Width"]));
+            }
+            set {
+                this["listView1Header7_Width"] = value;
             }
         }
     }

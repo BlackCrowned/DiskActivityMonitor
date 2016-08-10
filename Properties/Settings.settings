@@ -30,7 +30,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="groupBox2_Location" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">435, 27</Value>
+      <Value Profile="(Default)">471, 27</Value>
     </Setting>
     <Setting Name="groupBox2_Size" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">141, 326</Value>
@@ -39,13 +39,16 @@
       <Value Profile="(Default)">13, 27</Value>
     </Setting>
     <Setting Name="groupBox1_Size" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">416, 326</Value>
+      <Value Profile="(Default)">452, 326</Value>
     </Setting>
     <Setting Name="listbox1_Location" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">6, 19</Value>
     </Setting>
     <Setting Name="listbox1_Size" Type="System.Drawing.Size" Scope="User">
-      <Value Profile="(Default)">404, 301</Value>
+      <Value Profile="(Default)">440, 301</Value>
+    </Setting>
+    <Setting Name="listView1Header7_Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">48</Value>
     </Setting>
   </Settings>
 </SettingsFile>
