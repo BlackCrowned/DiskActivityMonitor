@@ -438,7 +438,7 @@ namespace DiskUsageAnalizer
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DiskUsage Analizer\n(c) 2016 Michael M.", "DiskUsageAnalizer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("DiskUsage Analizer\n(c) 2016 Michael M.", "DiskUsage Analizer", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void showConsoleToolStripMenuItem_Click(object sender, EventArgs e)
