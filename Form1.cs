@@ -3,13 +3,10 @@ using System.Windows.Forms;
 
 namespace DiskUsageAnalizer
 {
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
-    using System.Runtime.Remoting.Messaging;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Timers;
 
@@ -166,7 +163,7 @@ namespace DiskUsageAnalizer
             }
             catch (ArgumentException)
             {
-                callbackData.IssuingProcessName = "";
+                callbackData.IssuingProcessName = "Unknown";
             }
             lock (_data)
             {
@@ -198,15 +195,15 @@ namespace DiskUsageAnalizer
         {
             string prefix = "";
             double converted = 0;
-            if (bytes > Math.Pow(2, 80))
+            if (bytes > Math.Pow(2, 40))
             {
                 prefix = "Ti";
-                converted = bytes / Math.Pow(2, 80);
+                converted = bytes / Math.Pow(2, 40);
             }
-            else if (bytes > Math.Pow(2, 40))
+            else if (bytes > Math.Pow(2, 30))
             {
                 prefix = "Gi";
-                converted = bytes / Math.Pow(2, 40);
+                converted = bytes / Math.Pow(2, 30);
             }
             else if (bytes > Math.Pow(2, 20))
             {
