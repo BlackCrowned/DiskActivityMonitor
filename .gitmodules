@@ -1,0 +1,3 @@
+[submodule "RealTimeEWTListener"]
+	path = RealTimeEWTListener
+url=https://github.com/BlackCrowned/RealTimeEWTListener.git
