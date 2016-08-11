@@ -8,7 +8,10 @@ namespace DiskUsageAnalizer
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Timers;
+    using System.Web.WebSockets;
 
     using Timer = System.Timers.Timer;
 
@@ -45,6 +48,10 @@ namespace DiskUsageAnalizer
 
         private static string _filePath;
 
+        private SaveState _saveState;
+
+        private event Action Saved;
+
         public Form1()
         {
             InitializeComponent();
@@ -53,10 +60,7 @@ namespace DiskUsageAnalizer
 
             _data = new Data();
 
-            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
-            {
-                RestoreFromFile(new FileStream(_filePath, FileMode.Open));
-            }
+            _saveState = SaveState.NotSaved;
 
             _updateListView1Timer = new Timer(500) { AutoReset = true };
             _updateListView1Timer.Elapsed += UpdateListView1;
@@ -64,8 +68,6 @@ namespace DiskUsageAnalizer
             listView1.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
 
             ConsumerClass.EventReceived += HandleDiskEvents;
-
-            Disposed += OnDisposed;
         }
 
         private void UpdateListView1(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -95,7 +97,7 @@ namespace DiskUsageAnalizer
             CallbackData callbackData;
             lock (_data)
             {
-                callbackData = _data.CallbacksDataList[retrieveVirtualItemEventArgs.ItemIndex]; 
+                callbackData = _data.CallbacksDataList[retrieveVirtualItemEventArgs.ItemIndex];
             }
             var listViewItem = new ListViewItem(callbackData.Index.ToString());
             listViewItem.SubItems.Add(callbackData.DiskNumber.ToString());
@@ -110,7 +112,29 @@ namespace DiskUsageAnalizer
 
         protected override void OnClosing(CancelEventArgs eventArgs)
         {
-            Save();
+            if (_saveState == SaveState.Saved)
+            {
+                base.OnClosing(eventArgs);
+                return;
+            }
+
+            var result = MessageBox.Show("Save changes?", "DiskUsage Analizer", MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button3);
+            switch (result)
+            {
+                case DialogResult.Yes:
+                    Hide();
+                    Cleanup();
+                    eventArgs.Cancel = true;
+                    Saved += Close;
+                    Save();
+                    break;
+                case DialogResult.No:
+                    Cleanup();
+                    break;
+                case DialogResult.Cancel:
+                    eventArgs.Cancel = true;
+                    break;
+            }
             base.OnClosing(eventArgs);
         }
 
@@ -131,10 +155,19 @@ namespace DiskUsageAnalizer
                     Program.ResetForm1();
                 }
             }
+
+            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath)
+                && MessageBox.Show("Restore session from last time?", "Restore session...", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                RestoreFromFile(new FileStream(_filePath, FileMode.Open));
+            }
         }
 
-        private void OnDisposed(object sender, EventArgs eventArgs)
+        private void Cleanup()
         {
+            ConsumerClass.EventReceived -= HandleDiskEvents;
+            _updateListView1Timer.Stop();
+            _updateTotalTimeRunningTimer.Stop();
             Properties.Settings.Default._filePath = _filePath;
             Properties.Settings.Default.Form1_ClientSize = Size;
             Properties.Settings.Default.Form1_Location = Location;
@@ -168,13 +201,13 @@ namespace DiskUsageAnalizer
             catch
             {
                 callbackData.IssuingProcessName = "Unknown";
-                //TODO Log error
             }
             lock (_data)
             {
                 callbackData.Index = _data.Index++;
                 _data.CallbacksDataList.Add(callbackData);
             }
+            _saveState = SaveState.NotSaved;
 
             SafeInvokeUIThread(
                                delegate
@@ -285,6 +318,10 @@ namespace DiskUsageAnalizer
 
         private void Save()
         {
+            if (_saveState != SaveState.NotSaved) return;
+
+            _saveState = SaveState.Saving;
+
             if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
             {
                 SaveToFile(new FileStream(_filePath, FileMode.Truncate));
@@ -315,6 +352,7 @@ namespace DiskUsageAnalizer
         {
             if (fileStream == null)
             {
+                _saveState = SaveState.Failed;
                 return;
             }
             fileStream.SetLength(0);
@@ -323,17 +361,34 @@ namespace DiskUsageAnalizer
             if (!fileStream.CanWrite)
             {
                 MessageBox.Show("Insufficient rights!", "Writing to file failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _saveState = SaveState.Failed;
                 return;
             }
 
-            var formatter = new BinaryFormatter();
+            var bw = new BackgroundWorker();
+            var progressDialog = new ProgressDialog("Saving...");
 
-            lock (_data)
-            {
-                formatter.Serialize(fileStream, _data);
-            }
+            bw.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
 
-            fileStream.Close();
+                    var formatter = new BinaryFormatter();
+
+                    lock (_data)
+                    {
+                        formatter.Serialize(fileStream, _data);
+                    }
+                };
+            bw.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    progressDialog.Close();
+                    _saveState = SaveState.Saved;
+
+                    fileStream.Close();
+                    Saved?.Invoke();
+                };
+
+            progressDialog.Show();
+            bw.RunWorkerAsync();
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
@@ -365,6 +420,7 @@ namespace DiskUsageAnalizer
 
         private void SaveFileAs()
         {
+            _saveState = SaveState.Saving;
             var fileStream = ShowSaveFileDialog();
             SaveToFile(fileStream);
         }
@@ -376,28 +432,45 @@ namespace DiskUsageAnalizer
 
         private void OpenFile()
         {
+            _saveState = SaveState.Restoring;
             var fileStream = ShowOpenFileDialog();
             RestoreFromFile(fileStream);
         }
 
         private void RestoreFromFile(Stream fileStream)
         {
-            if (fileStream == null) return;
+            if (fileStream == null)
+            {
+                _saveState = SaveState.Failed;
+                return;
+            }
             if (!fileStream.CanRead)
             {
                 MessageBox.Show("Insufficient rights!", "Reading from file failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _saveState = SaveState.Failed;
                 return;
             }
 
-            var formatter = new BinaryFormatter();
-            lock (_data)
-            {
-                _data = (Data)formatter.Deserialize(fileStream);
-            }
+            var bw = new BackgroundWorker();
+            var progressDialog = new ProgressDialog("Opening...");
 
-            fileStream.Close();
+            bw.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var formatter = new BinaryFormatter();
+                        _data = (Data)formatter.Deserialize(fileStream);
+                };
+            bw.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    progressDialog.Close();
+                    _saveState = SaveState.Saved;
 
-            SafeInvokeUIThread(InitGUI);
+                    fileStream.Close();
+
+                    SafeInvokeUIThread(InitGUI);
+                };
+
+            bw.RunWorkerAsync();
+            progressDialog.Show(this);
         }
 
         private void InitGUI()
@@ -423,7 +496,7 @@ namespace DiskUsageAnalizer
                                      ShowReadOnly = true,
                                      DefaultExt = "txt",
                                      Filter = "Data files|*.dat|Text files|*.txt|All files|*.*"
-            };
+                                 };
 
             var result = fileDialog.ShowDialog();
 
@@ -431,6 +504,8 @@ namespace DiskUsageAnalizer
             {
                 return null;
             }
+
+            _filePath = fileDialog.FileName;
 
             return fileDialog.OpenFile();
         }
@@ -476,9 +551,19 @@ namespace DiskUsageAnalizer
             }
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
+        private void groupBox1_Enter(object sender, EventArgs e) {}
+    }
 
-        }
+    public enum SaveState
+    {
+        Saved = 1,
+
+        Saving,
+
+        NotSaved,
+
+        Restoring,
+
+        Failed
     }
 }

@@ -367,7 +367,6 @@
             this.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::DiskUsageAnalizer.Properties.Settings.Default, "Form1_ClientSize", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.Location = global::DiskUsageAnalizer.Properties.Settings.Default.Form1_Location;
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximizeBox = false;
             this.Name = "Form1";
             this.ShowIcon = false;
             this.Text = "DiskUsage Analizer";
