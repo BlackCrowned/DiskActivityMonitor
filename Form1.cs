@@ -52,6 +52,12 @@ namespace DiskUsageAnalizer
 
         private event Action Saved;
 
+        private event Action SaveFailed;
+
+        private event Action Restored;
+
+        private event Action RestoreFailed;
+
         public Form1()
         {
             InitializeComponent();
@@ -68,6 +74,8 @@ namespace DiskUsageAnalizer
             listView1.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
 
             ConsumerClass.EventReceived += HandleDiskEvents;
+
+            Disposed += (sender, args) => Cleanup();
         }
 
         private void UpdateListView1(object sender, ElapsedEventArgs elapsedEventArgs)
@@ -80,6 +88,15 @@ namespace DiskUsageAnalizer
                                        lock (_data)
                                        {
                                            if (_data.CallbacksDataList.Count == listView1.VirtualListSize) return;
+
+                                           if (_data.CallbacksDataList[listView1.VirtualListSize].Time - DateTime.Now > TimeSpan.FromSeconds(15))
+                                           {
+                                               _updateListView1Timer.Interval = 5000;
+                                           }
+                                           else
+                                           {
+                                               _updateListView1Timer.Interval = 500;
+                                           }
 
                                            if (_data.CallbacksDataList.Count > _maxHistorySize + _maxOverflowBufferSize)
                                            {
@@ -112,7 +129,7 @@ namespace DiskUsageAnalizer
 
         protected override void OnClosing(CancelEventArgs eventArgs)
         {
-            if (_saveState == SaveState.Saved)
+            if (_saveState == SaveState.Saved  || _saveState == SaveState.Failed)
             {
                 base.OnClosing(eventArgs);
                 return;
@@ -122,14 +139,13 @@ namespace DiskUsageAnalizer
             switch (result)
             {
                 case DialogResult.Yes:
-                    Hide();
-                    Cleanup();
                     eventArgs.Cancel = true;
                     Saved += Close;
+                    SaveFailed += Close;
                     Save();
+                    Hide();
                     break;
                 case DialogResult.No:
-                    Cleanup();
                     break;
                 case DialogResult.Cancel:
                     eventArgs.Cancel = true;
@@ -161,13 +177,17 @@ namespace DiskUsageAnalizer
             {
                 RestoreFromFile(new FileStream(_filePath, FileMode.Open));
             }
+            else
+            {
+                _filePath = "";
+            }
         }
 
         private void Cleanup()
         {
             ConsumerClass.EventReceived -= HandleDiskEvents;
-            _updateListView1Timer.Stop();
-            _updateTotalTimeRunningTimer.Stop();
+            _updateListView1Timer?.Stop();
+            _updateTotalTimeRunningTimer?.Stop();
             Properties.Settings.Default._filePath = _filePath;
             Properties.Settings.Default.Form1_ClientSize = Size;
             Properties.Settings.Default.Form1_Location = Location;
@@ -190,28 +210,28 @@ namespace DiskUsageAnalizer
 
         private void HandleDiskEvents(CallbackData callbackData)
         {
-            try
-            {
-                callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
-            }
-            catch (ArgumentException)
-            {
-                callbackData.IssuingProcessName = "Unknown";
-            }
-            catch
-            {
-                callbackData.IssuingProcessName = "Unknown";
-            }
-            lock (_data)
-            {
-                callbackData.Index = _data.Index++;
-                _data.CallbacksDataList.Add(callbackData);
-            }
-            _saveState = SaveState.NotSaved;
-
             SafeInvokeUIThread(
                                delegate
                                    {
+                                       try
+                                       {
+                                           callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
+                                       }
+                                       catch (ArgumentException)
+                                       {
+                                           callbackData.IssuingProcessName = "Unknown";
+                                       }
+                                       catch
+                                       {
+                                           callbackData.IssuingProcessName = "Unknown";
+                                       }
+                                       lock (_data)
+                                       {
+                                           callbackData.Index = _data.Index++;
+                                           _data.CallbacksDataList.Add(callbackData);
+                                       }
+                                       _saveState = SaveState.NotSaved;
+
                                        lock (_data)
                                        {
                                            switch (callbackData.Action)
@@ -298,7 +318,7 @@ namespace DiskUsageAnalizer
             {
                 if (!IsDisposed && !Disposing && IsHandleCreated)
                 {
-                    Invoke(target);
+                    BeginInvoke(target);
                 }
                 else if (!IsDisposed && !Disposing && !IsHandleCreated)
                 {
@@ -353,6 +373,7 @@ namespace DiskUsageAnalizer
             if (fileStream == null)
             {
                 _saveState = SaveState.Failed;
+                SaveFailed?.Invoke();
                 return;
             }
             fileStream.SetLength(0);
@@ -362,6 +383,7 @@ namespace DiskUsageAnalizer
             {
                 MessageBox.Show("Insufficient rights!", "Writing to file failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _saveState = SaveState.Failed;
+                SaveFailed?.Invoke();
                 return;
             }
 
@@ -370,12 +392,19 @@ namespace DiskUsageAnalizer
 
             bw.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
-
-                    var formatter = new BinaryFormatter();
-
-                    lock (_data)
+                    try
                     {
-                        formatter.Serialize(fileStream, _data);
+                        var formatter = new BinaryFormatter();
+
+                        lock (_data)
+                        {
+                            formatter.Serialize(fileStream, _data);
+                        }
+                    }
+                    catch 
+                    {
+                        _saveState = SaveState.Failed;
+                        SaveFailed?.Invoke();
                     }
                 };
             bw.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
@@ -442,12 +471,14 @@ namespace DiskUsageAnalizer
             if (fileStream == null)
             {
                 _saveState = SaveState.Failed;
+                RestoreFailed?.Invoke();
                 return;
             }
             if (!fileStream.CanRead)
             {
                 MessageBox.Show("Insufficient rights!", "Reading from file failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _saveState = SaveState.Failed;
+                RestoreFailed?.Invoke();
                 return;
             }
 
@@ -456,8 +487,16 @@ namespace DiskUsageAnalizer
 
             bw.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
-                    var formatter = new BinaryFormatter();
+                    try
+                    {
+                        var formatter = new BinaryFormatter();
                         _data = (Data)formatter.Deserialize(fileStream);
+                    }
+                    catch 
+                    {
+                        _saveState = SaveState.Failed;
+                        RestoreFailed?.Invoke();
+                    }
                 };
             bw.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
@@ -467,10 +506,12 @@ namespace DiskUsageAnalizer
                     fileStream.Close();
 
                     SafeInvokeUIThread(InitGUI);
+
+                    Restored?.Invoke();
                 };
 
             bw.RunWorkerAsync();
-            progressDialog.Show(this);
+            progressDialog.Show();
         }
 
         private void InitGUI()
