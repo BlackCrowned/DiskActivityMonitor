@@ -105,6 +105,9 @@ namespace DiskUsageAnalizer
 
                                            listView1.VirtualListSize = _data.CallbacksDataList.Count;
                                            if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
+
+                                           textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
+                                           textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
                                        }
                                    });
         }
@@ -140,6 +143,7 @@ namespace DiskUsageAnalizer
             {
                 case DialogResult.Yes:
                     eventArgs.Cancel = true;
+                    StopEventHandling();
                     Saved += Close;
                     SaveFailed += Close;
                     Save();
@@ -185,9 +189,7 @@ namespace DiskUsageAnalizer
 
         private void Cleanup()
         {
-            ConsumerClass.EventReceived -= HandleDiskEvents;
-            _updateListView1Timer?.Stop();
-            _updateTotalTimeRunningTimer?.Stop();
+            StopEventHandling();
             Properties.Settings.Default._filePath = _filePath;
             Properties.Settings.Default.Form1_ClientSize = Size;
             Properties.Settings.Default.Form1_Location = Location;
@@ -208,45 +210,45 @@ namespace DiskUsageAnalizer
             Ewt.deleteRTL(ref _rtlHandle);
         }
 
+        private void StopEventHandling()
+        {
+            Ewt.rtlStopConsumption(_rtlHandle);
+            ConsumerClass.EventReceived -= HandleDiskEvents;
+            _updateListView1Timer?.Stop();
+            _updateTotalTimeRunningTimer?.Stop();
+        }
+
         private void HandleDiskEvents(CallbackData callbackData)
         {
-            SafeInvokeUIThread(
-                               delegate
-                                   {
-                                       try
-                                       {
-                                           callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
-                                       }
-                                       catch (ArgumentException)
-                                       {
-                                           callbackData.IssuingProcessName = "Unknown";
-                                       }
-                                       catch
-                                       {
-                                           callbackData.IssuingProcessName = "Unknown";
-                                       }
-                                       lock (_data)
-                                       {
-                                           callbackData.Index = _data.Index++;
-                                           _data.CallbacksDataList.Add(callbackData);
-                                       }
-                                       _saveState = SaveState.NotSaved;
+            try
+            {
+                callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
+            }
+            catch (ArgumentException)
+            {
+                callbackData.IssuingProcessName = "Unknown";
+            }
+            catch
+            {
+                callbackData.IssuingProcessName = "Unknown";
+            }
+            lock (_data)
+            {
+                callbackData.Index = _data.Index++;
+                _data.CallbacksDataList.Add(callbackData);
 
-                                       lock (_data)
-                                       {
-                                           switch (callbackData.Action)
-                                           {
-                                               case DiskAction.Read:
-                                                   _data.TotalBytesRead += callbackData.TransferSize;
-                                                   textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
-                                                   break;
-                                               case DiskAction.Write:
-                                                   _data.TotalBytesWritten += callbackData.TransferSize;
-                                                   textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
-                                                   break;
-                                           }
-                                       }
-                                   });
+                switch (callbackData.Action)
+                {
+                    case DiskAction.Read:
+                        _data.TotalBytesRead += callbackData.TransferSize;
+                        break;
+                    case DiskAction.Write:
+                        _data.TotalBytesWritten += callbackData.TransferSize;
+                        break;
+                }
+            }
+
+            _saveState = SaveState.NotSaved;
         }
 
         private static string DisplayAsBytes(ulong bytes)
@@ -274,7 +276,7 @@ namespace DiskUsageAnalizer
                 converted = bytes / Math.Pow(2, 10);
             }
 
-            return $"{converted:0.00} {prefix}B";
+            return $"{converted:0.0} {prefix}B";
         }
 
         private static string DisplayAsSeconds(double seconds)
