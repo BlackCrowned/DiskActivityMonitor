@@ -1,4 +1,4 @@
-﻿namespace DiskUsageAnalizer
+﻿namespace DiskActivityMonitor
 {
     partial class Form1
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            DiskActivityMonitor.Properties.Settings settings1 = new DiskActivityMonitor.Properties.Settings();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -72,12 +73,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.listView1);
-            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::DiskUsageAnalizer.Properties.Settings.Default, "groupBox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::DiskUsageAnalizer.Properties.Settings.Default, "groupBox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox1.Location = global::DiskUsageAnalizer.Properties.Settings.Default.groupBox1_Location;
+            this.groupBox1.Location = settings1.groupBox1_Location;
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = global::DiskUsageAnalizer.Properties.Settings.Default.groupBox1_Size;
+            this.groupBox1.Size = settings1.groupBox1_Size;
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Disk usage:";
@@ -96,12 +97,13 @@
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5});
-            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::DiskUsageAnalizer.Properties.Settings.Default, "listbox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::DiskUsageAnalizer.Properties.Settings.Default, "listbox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "listbox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "listbox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.listView1.FullRowSelect = true;
-            this.listView1.Location = global::DiskUsageAnalizer.Properties.Settings.Default.listbox1_Location;
+            this.listView1.HideSelection = false;
+            this.listView1.Location = settings1.listbox1_Location;
             this.listView1.Name = "listView1";
-            this.listView1.Size = global::DiskUsageAnalizer.Properties.Settings.Default.listbox1_Size;
+            this.listView1.Size = settings1.listbox1_Size;
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -110,37 +112,54 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "ID";
-            this.columnHeader1.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header1_Width;
+            settings1._filePath = "";
+            settings1.Form1_ClientSize = new System.Drawing.Size(656, 421);
+            settings1.Form1_Location = new System.Drawing.Point(0, 0);
+            settings1.groupBox1_Location = new System.Drawing.Point(13, 27);
+            settings1.groupBox1_Size = new System.Drawing.Size(479, 343);
+            settings1.groupBox2_Location = new System.Drawing.Point(498, 27);
+            settings1.groupBox2_Size = new System.Drawing.Size(130, 343);
+            settings1.listbox1_Location = new System.Drawing.Point(6, 19);
+            settings1.listbox1_Size = new System.Drawing.Size(467, 318);
+            settings1.listView1Header1_Width = 34;
+            settings1.listView1Header2_Width = 97;
+            settings1.listView1Header3_Width = 60;
+            settings1.listView1Header4_Width = 63;
+            settings1.listView1Header5_Width = 72;
+            settings1.listView1Header6_Width = 60;
+            settings1.listView1Header7_Width = 48;
+            settings1.SettingsKey = "";
+            this.columnHeader1.Width = settings1.listView1Header1_Width;
             // 
             // columnHeader7
             // 
             this.columnHeader7.Text = "Disk #";
-            this.columnHeader7.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header7_Width;
+            this.columnHeader7.Width = settings1.listView1Header7_Width;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "Time";
-            this.columnHeader6.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header6_Width;
+            this.columnHeader6.Width = settings1.listView1Header6_Width;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Process";
-            this.columnHeader2.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header2_Width;
+            this.columnHeader2.Width = settings1.listView1Header2_Width;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Action";
-            this.columnHeader3.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header3_Width;
+            this.columnHeader3.Width = settings1.listView1Header3_Width;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Amount";
-            this.columnHeader4.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header4_Width;
+            this.columnHeader4.Width = settings1.listView1Header4_Width;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "Duration";
-            this.columnHeader5.Width = global::DiskUsageAnalizer.Properties.Settings.Default.listView1Header5_Width;
+            this.columnHeader5.Width = settings1.listView1Header5_Width;
             // 
             // groupBox2
             // 
@@ -152,12 +171,12 @@
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.textBox1);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::DiskUsageAnalizer.Properties.Settings.Default, "groupBox2_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::DiskUsageAnalizer.Properties.Settings.Default, "groupBox2_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox2_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox2_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox2.Location = global::DiskUsageAnalizer.Properties.Settings.Default.groupBox2_Location;
+            this.groupBox2.Location = settings1.groupBox2_Location;
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = global::DiskUsageAnalizer.Properties.Settings.Default.groupBox2_Size;
+            this.groupBox2.Size = settings1.groupBox2_Size;
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Summary";
@@ -292,20 +311,20 @@
             this.startToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.analizerToolStripMenuItem.Name = "analizerToolStripMenuItem";
-            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.analizerToolStripMenuItem.Text = "Analizer";
+            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.analizerToolStripMenuItem.Text = "Monitor";
             // 
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -321,14 +340,14 @@
             // showConsoleToolStripMenuItem
             // 
             this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
-            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showConsoleToolStripMenuItem.Text = "Show Console";
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
             // 
             // addSomeEntriesToolStripMenuItem
             // 
             this.addSomeEntriesToolStripMenuItem.Name = "addSomeEntriesToolStripMenuItem";
-            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.addSomeEntriesToolStripMenuItem.Text = "Add some Entries";
             this.addSomeEntriesToolStripMenuItem.Click += new System.EventHandler(this.addSomeEntriesToolStripMenuItem_Click);
             // 
@@ -344,15 +363,15 @@
             // resetDefaultsToolStripMenuItem
             // 
             this.resetDefaultsToolStripMenuItem.Name = "resetDefaultsToolStripMenuItem";
-            this.resetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.resetDefaultsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.resetDefaultsToolStripMenuItem.Text = "Reset Defaults";
             this.resetDefaultsToolStripMenuItem.Click += new System.EventHandler(this.resetDefaultsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.infoToolStripMenuItem.Text = "About DiskUsage Analizer";
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.infoToolStripMenuItem.Text = "About Disk Activity Monitor";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
             // Form1
@@ -363,13 +382,13 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
-            this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::DiskUsageAnalizer.Properties.Settings.Default, "Form1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.DataBindings.Add(new System.Windows.Forms.Binding("Size", global::DiskUsageAnalizer.Properties.Settings.Default, "Form1_ClientSize", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.Location = global::DiskUsageAnalizer.Properties.Settings.Default.Form1_Location;
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "Form1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "Form1_ClientSize", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.Location = settings1.Form1_Location;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.ShowIcon = false;
-            this.Text = "DiskUsage Analizer";
+            this.Text = "Disk Activity Monitor";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

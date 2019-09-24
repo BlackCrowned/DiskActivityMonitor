@@ -1,4 +1,4 @@
-﻿namespace DiskUsageAnalizer.Properties {
+﻿namespace DiskActivityMonitor.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

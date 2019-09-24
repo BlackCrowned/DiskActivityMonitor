@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiskUsageAnalizer
+namespace DiskActivityMonitor
 {
     using System.Reflection;
     using System.Windows.Forms;

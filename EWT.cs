@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiskUsageAnalizer
+namespace DiskActivityMonitor
 {
     using System.Runtime.InteropServices;
 

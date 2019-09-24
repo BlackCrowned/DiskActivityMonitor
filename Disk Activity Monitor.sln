@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskUsageAnalizer", "DiskUsageAnalizer.csproj", "{445426F7-F19B-48E6-A8AC-C7598493A034}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disk Activity Monitor", "Disk Activity Monitor.csproj", "{445426F7-F19B-48E6-A8AC-C7598493A034}"
 	ProjectSection(ProjectDependencies) = postProject
 		{081B5568-EC76-44F7-976F-8A6D9B3751EE} = {081B5568-EC76-44F7-976F-8A6D9B3751EE}
 	EndProjectSection

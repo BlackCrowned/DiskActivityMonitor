@@ -1,1 +1,1 @@
-DiskUsageAnalizer
+DiskUsageAnalyzer

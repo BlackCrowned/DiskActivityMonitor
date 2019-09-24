@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace DiskUsageAnalizer
+namespace DiskActivityMonitor
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -141,7 +141,7 @@ namespace DiskUsageAnalizer
                 return;
             }
 
-            var result = MessageBox.Show("Save changes?", "DiskUsage Analizer", MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button3);
+            var result = MessageBox.Show("Save changes?", "Disk Activity Monitor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button3);
             switch (result)
             {
                 case DialogResult.Yes:
@@ -585,7 +585,7 @@ namespace DiskUsageAnalizer
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("DiskUsage Analizer\n(c) 2016 Michael M.", "DiskUsage Analizer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Disk Activity Monitor", "Disk Activity Monitor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void showConsoleToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿namespace DiskUsageAnalizer
+﻿namespace DiskActivityMonitor
 {
     partial class ProgressDialog
     {
@@ -50,7 +50,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ProgressDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "DiskUsage Analizer";
+            this.Text = "Disk Activity Monitor";
             this.ResumeLayout(false);
 
         }
