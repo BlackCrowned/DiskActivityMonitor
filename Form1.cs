@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace DiskUsageAnalizer
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -49,6 +50,8 @@ namespace DiskUsageAnalizer
         private static string _filePath;
 
         private SaveState _saveState;
+
+        private ConcurrentDictionary<int, (Process, string)> _processMap = new ConcurrentDictionary<int, (Process, string)>();
 
         private event Action Saved;
 
@@ -220,18 +223,8 @@ namespace DiskUsageAnalizer
 
         private void HandleDiskEvents(CallbackData callbackData)
         {
-            try
-            {
-                callbackData.IssuingProcessName = Process.GetProcessById(Convert.ToInt32(callbackData.IssuingProcessId)).ProcessName;
-            }
-            catch (ArgumentException)
-            {
-                callbackData.IssuingProcessName = "Unknown";
-            }
-            catch
-            {
-                callbackData.IssuingProcessName = "Unknown";
-            }
+            callbackData.IssuingProcessName = GetProcessNama(callbackData.IssuingProcessId);
+
             lock (_data)
             {
                 callbackData.Index = _data.Index++;
@@ -249,6 +242,37 @@ namespace DiskUsageAnalizer
             }
 
             _saveState = SaveState.NotSaved;
+        }
+
+        private string GetProcessNama(int pid)
+        {
+            if (_processMap.ContainsKey(pid))
+            {
+                if (_processMap.TryGetValue(pid, out var tuple))
+                {
+                    return tuple.Item2;
+                }
+            }
+
+            try
+            {
+                var process = Process.GetProcessById(pid);
+                process.Exited += (o, s) => _processMap.TryRemove(pid, out var _);
+
+                var processName = process.ProcessName;
+                _processMap.TryAdd(pid, (process, processName));
+
+                return processName;
+            }
+            catch (ArgumentException)
+            {
+                return "Unknown";
+            }
+            catch
+            {
+                return "Unknown";
+            }
+
         }
 
         private static string DisplayAsBytes(ulong bytes)
