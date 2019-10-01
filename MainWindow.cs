@@ -16,7 +16,7 @@ namespace DiskActivityMonitor
 
     using Timer = System.Timers.Timer;
 
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         [Serializable]
         private class Data
@@ -61,7 +61,7 @@ namespace DiskActivityMonitor
 
         private event Action RestoreFailed;
 
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -74,7 +74,7 @@ namespace DiskActivityMonitor
             _updateListView1Timer = new Timer(500) { AutoReset = true };
             _updateListView1Timer.Elapsed += UpdateListView1;
 
-            listView1.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
+            lstDiskEventLog.RetrieveVirtualItem += ListView1OnRetrieveVirtualItem;
 
             ConsumerClass.EventReceived += HandleDiskEvents;
 
@@ -90,9 +90,9 @@ namespace DiskActivityMonitor
 
                                        lock (_data)
                                        {
-                                           if (_data.CallbacksDataList.Count == listView1.VirtualListSize) return;
+                                           if (_data.CallbacksDataList.Count == lstDiskEventLog.VirtualListSize) return;
 
-                                           if (_data.CallbacksDataList[listView1.VirtualListSize].Time - DateTime.Now > TimeSpan.FromSeconds(15))
+                                           if (_data.CallbacksDataList[lstDiskEventLog.VirtualListSize].Time - DateTime.Now > TimeSpan.FromSeconds(15))
                                            {
                                                _updateListView1Timer.Interval = 5000;
                                            }
@@ -106,11 +106,11 @@ namespace DiskActivityMonitor
                                                _data.CallbacksDataList.RemoveRange(0, _data.CallbacksDataList.Count - _maxHistorySize);
                                            }
 
-                                           listView1.VirtualListSize = _data.CallbacksDataList.Count;
-                                           if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
+                                           lstDiskEventLog.VirtualListSize = _data.CallbacksDataList.Count;
+                                           if (_data.CallbacksDataList.Count > 0) lstDiskEventLog.EnsureVisible(_data.CallbacksDataList.Count - 1);
 
-                                           textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
-                                           textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
+                                           txtTotalRead.Text = DisplayAsBytes(_data.TotalBytesRead);
+                                           txtTotalWritten.Text = DisplayAsBytes(_data.TotalBytesWritten);
                                        }
                                    });
         }
@@ -166,7 +166,7 @@ namespace DiskActivityMonitor
             base.OnShown(e);
 
             InitGUI();
-            listView1.DoubleBuffered(true);
+            lstDiskEventLog.DoubleBuffered(true);
 
             Ewt.genRTL(out _rtlHandle);
             if (Ewt.rtlStartTrace(_rtlHandle) != 0)
@@ -196,12 +196,12 @@ namespace DiskActivityMonitor
             Properties.Settings.Default._filePath = _filePath;
             Properties.Settings.Default.Form1_ClientSize = Size;
             Properties.Settings.Default.Form1_Location = Location;
-            Properties.Settings.Default.groupBox1_Location = groupBox1.Location;
-            Properties.Settings.Default.groupBox1_Size = groupBox1.Size;
-            Properties.Settings.Default.groupBox2_Location = groupBox2.Location;
-            Properties.Settings.Default.groupBox2_Size = groupBox2.Size;
-            Properties.Settings.Default.listbox1_Location = listView1.Location;
-            Properties.Settings.Default.listbox1_Size = listView1.Size;
+            Properties.Settings.Default.groupBox1_Location = grpActivity.Location;
+            Properties.Settings.Default.groupBox1_Size = grpActivity.Size;
+            Properties.Settings.Default.groupBox2_Location = grpSummary.Location;
+            Properties.Settings.Default.groupBox2_Size = grpSummary.Size;
+            Properties.Settings.Default.listbox1_Location = lstDiskEventLog.Location;
+            Properties.Settings.Default.listbox1_Size = lstDiskEventLog.Size;
             Properties.Settings.Default.listView1Header1_Width = columnHeader1.Width;
             Properties.Settings.Default.listView1Header2_Width = columnHeader2.Width;
             Properties.Settings.Default.listView1Header3_Width = columnHeader3.Width;
@@ -333,7 +333,7 @@ namespace DiskActivityMonitor
                                    {
                                        lock (_data)
                                        {
-                                           textBox3.Text = new DateTime(_data.TotalTimeRunning.Ticks).ToLongTimeString();
+                                           txtDuration.Text = new TimeSpan(_data.TotalTimeRunning.Ticks).ToString();
                                        }
                                    });
         }
@@ -544,11 +544,11 @@ namespace DiskActivityMonitor
         {
             lock (_data)
             {
-                listView1.VirtualListSize = _data.CallbacksDataList.Count;
-                if (_data.CallbacksDataList.Count > 0) listView1.EnsureVisible(_data.CallbacksDataList.Count - 1);
-                textBox1.Text = DisplayAsBytes(_data.TotalBytesRead);
-                textBox2.Text = DisplayAsBytes(_data.TotalBytesWritten);
-                textBox3.Text = new DateTime(_data.TotalTimeRunning.Ticks).ToLongTimeString();
+                lstDiskEventLog.VirtualListSize = _data.CallbacksDataList.Count;
+                if (_data.CallbacksDataList.Count > 0) lstDiskEventLog.EnsureVisible(_data.CallbacksDataList.Count - 1);
+                txtTotalRead.Text = DisplayAsBytes(_data.TotalBytesRead);
+                txtTotalWritten.Text = DisplayAsBytes(_data.TotalBytesWritten);
+                txtDuration.Text = new TimeSpan(_data.TotalTimeRunning.Ticks).ToString();
             }
             _updateListView1Timer.Start();
         }
@@ -585,7 +585,7 @@ namespace DiskActivityMonitor
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Disk Activity Monitor", "Disk Activity Monitor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Disk Activity Monitor\n\n© 2019 BlackCrowned (https://github.com/BlackCrowned)", "Disk Activity Monitor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void showConsoleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -597,10 +597,10 @@ namespace DiskActivityMonitor
         {
             Save();
 
-            listView1.Items.Clear();
-            textBox1.Text = "0 B";
-            textBox2.Text = "0 B";
-            textBox3.Text = "00:00:00";
+            lstDiskEventLog.Items.Clear();
+            txtTotalRead.Text = "0 B";
+            txtTotalWritten.Text = "0 B";
+            txtDuration.Text = "00:00:00";
 
             _data = new Data();
             _listViewItemCache = new Dictionary<int, ListViewItem>();

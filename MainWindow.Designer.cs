@@ -1,6 +1,6 @@
 ﻿namespace DiskActivityMonitor
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             DiskActivityMonitor.Properties.Settings settings1 = new DiskActivityMonitor.Properties.Settings();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.grpActivity = new System.Windows.Forms.GroupBox();
+            this.lstDiskEventLog = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -38,14 +38,14 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.grpSummary = new System.Windows.Forms.GroupBox();
+            this.txtDuration = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtTotalWritten = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtTotalRead = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +53,7 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minimizeToTaskbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.analizerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.monitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,35 +61,35 @@
             this.addSomeEntriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetDefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grpActivity.SuspendLayout();
+            this.grpSummary.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // grpActivity
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpActivity.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.listView1);
-            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox1.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox1.Location = settings1.groupBox1_Location;
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = settings1.groupBox1_Size;
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Disk usage:";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            this.grpActivity.Controls.Add(this.lstDiskEventLog);
+            this.grpActivity.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.grpActivity.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.grpActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.grpActivity.Location = settings1.groupBox1_Location;
+            this.grpActivity.Name = "grpActivity";
+            this.grpActivity.Size = settings1.groupBox1_Size;
+            this.grpActivity.TabIndex = 0;
+            this.grpActivity.TabStop = false;
+            this.grpActivity.Text = "Activity";
+            this.grpActivity.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
-            // listView1
+            // lstDiskEventLog
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.lstDiskEventLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lstDiskEventLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader7,
             this.columnHeader6,
@@ -97,17 +97,17 @@
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5});
-            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "listbox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.listView1.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "listbox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.listView1.FullRowSelect = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = settings1.listbox1_Location;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = settings1.listbox1_Size;
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.VirtualMode = true;
+            this.lstDiskEventLog.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "listbox1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.lstDiskEventLog.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "listbox1_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.lstDiskEventLog.FullRowSelect = true;
+            this.lstDiskEventLog.HideSelection = false;
+            this.lstDiskEventLog.Location = settings1.listbox1_Location;
+            this.lstDiskEventLog.Name = "lstDiskEventLog";
+            this.lstDiskEventLog.Size = settings1.listbox1_Size;
+            this.lstDiskEventLog.TabIndex = 0;
+            this.lstDiskEventLog.UseCompatibleStateImageBehavior = false;
+            this.lstDiskEventLog.View = System.Windows.Forms.View.Details;
+            this.lstDiskEventLog.VirtualMode = true;
             // 
             // columnHeader1
             // 
@@ -161,34 +161,34 @@
             this.columnHeader5.Text = "Duration";
             this.columnHeader5.Width = settings1.listView1Header5_Width;
             // 
-            // groupBox2
+            // grpSummary
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.textBox3);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.textBox2);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.textBox1);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox2_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox2.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox2_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
-            this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox2.Location = settings1.groupBox2_Location;
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = settings1.groupBox2_Size;
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Summary";
+            this.grpSummary.Controls.Add(this.txtDuration);
+            this.grpSummary.Controls.Add(this.label3);
+            this.grpSummary.Controls.Add(this.txtTotalWritten);
+            this.grpSummary.Controls.Add(this.label2);
+            this.grpSummary.Controls.Add(this.txtTotalRead);
+            this.grpSummary.Controls.Add(this.label1);
+            this.grpSummary.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "groupBox2_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.grpSummary.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "groupBox2_Size", true, System.Windows.Forms.DataSourceUpdateMode.Never));
+            this.grpSummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.grpSummary.Location = settings1.groupBox2_Location;
+            this.grpSummary.Name = "grpSummary";
+            this.grpSummary.Size = settings1.groupBox2_Size;
+            this.grpSummary.TabIndex = 1;
+            this.grpSummary.TabStop = false;
+            this.grpSummary.Text = "Summary";
             // 
-            // textBox3
+            // txtDuration
             // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(9, 116);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(115, 20);
-            this.textBox3.TabIndex = 5;
-            this.textBox3.Text = "00:00:00";
+            this.txtDuration.Enabled = false;
+            this.txtDuration.Location = new System.Drawing.Point(9, 116);
+            this.txtDuration.Name = "txtDuration";
+            this.txtDuration.Size = new System.Drawing.Size(115, 20);
+            this.txtDuration.TabIndex = 5;
+            this.txtDuration.Text = "00:00:00";
             // 
             // label3
             // 
@@ -200,14 +200,14 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Total time running:";
             // 
-            // textBox2
+            // txtTotalWritten
             // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(9, 76);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(115, 20);
-            this.textBox2.TabIndex = 3;
-            this.textBox2.Text = "0 B";
+            this.txtTotalWritten.Enabled = false;
+            this.txtTotalWritten.Location = new System.Drawing.Point(9, 76);
+            this.txtTotalWritten.Name = "txtTotalWritten";
+            this.txtTotalWritten.Size = new System.Drawing.Size(115, 20);
+            this.txtTotalWritten.TabIndex = 3;
+            this.txtTotalWritten.Text = "0 B";
             // 
             // label2
             // 
@@ -219,14 +219,14 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Total written:";
             // 
-            // textBox1
+            // txtTotalRead
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(9, 36);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(115, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "0 B";
+            this.txtTotalRead.Enabled = false;
+            this.txtTotalRead.Location = new System.Drawing.Point(9, 36);
+            this.txtTotalRead.Name = "txtTotalRead";
+            this.txtTotalRead.Size = new System.Drawing.Size(115, 20);
+            this.txtTotalRead.TabIndex = 1;
+            this.txtTotalRead.Text = "0 B";
             // 
             // label1
             // 
@@ -238,18 +238,18 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Total read:";
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.analizerToolStripMenuItem,
+            this.monitorToolStripMenuItem,
             this.debugToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(640, 24);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(640, 24);
+            this.menuStrip.TabIndex = 2;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -305,14 +305,14 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // analizerToolStripMenuItem
+            // monitorToolStripMenuItem
             // 
-            this.analizerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.monitorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startToolStripMenuItem,
             this.stopToolStripMenuItem});
-            this.analizerToolStripMenuItem.Name = "analizerToolStripMenuItem";
-            this.analizerToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
-            this.analizerToolStripMenuItem.Text = "Monitor";
+            this.monitorToolStripMenuItem.Name = "monitorToolStripMenuItem";
+            this.monitorToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.monitorToolStripMenuItem.Text = "Monitor";
             // 
             // startToolStripMenuItem
             // 
@@ -355,7 +355,7 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetDefaultsToolStripMenuItem,
-            this.infoToolStripMenuItem});
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -367,33 +367,33 @@
             this.resetDefaultsToolStripMenuItem.Text = "Reset Defaults";
             this.resetDefaultsToolStripMenuItem.Click += new System.EventHandler(this.resetDefaultsToolStripMenuItem_Click);
             // 
-            // infoToolStripMenuItem
+            // aboutToolStripMenuItem
             // 
-            this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.infoToolStripMenuItem.Text = "About Disk Activity Monitor";
-            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.aboutToolStripMenuItem.Text = "About Disk Activity Monitor";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 382);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.grpSummary);
+            this.Controls.Add(this.grpActivity);
+            this.Controls.Add(this.menuStrip);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", settings1, "Form1_Location", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.DataBindings.Add(new System.Windows.Forms.Binding("Size", settings1, "Form1_ClientSize", true, System.Windows.Forms.DataSourceUpdateMode.Never));
             this.Location = settings1.Form1_Location;
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.MainMenuStrip = this.menuStrip;
+            this.Name = "MainWindow";
             this.ShowIcon = false;
             this.Text = "Disk Activity Monitor";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.grpActivity.ResumeLayout(false);
+            this.grpSummary.ResumeLayout(false);
+            this.grpSummary.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -401,25 +401,25 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.GroupBox grpActivity;
+        private System.Windows.Forms.ListView lstDiskEventLog;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.GroupBox grpSummary;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem analizerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem monitorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txtDuration;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtTotalWritten;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtTotalRead;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem minimizeToTaskbarToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeader6;
@@ -428,7 +428,7 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetDefaultsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
