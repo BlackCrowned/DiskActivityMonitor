@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
-    <Compile Include="EWT.cs" />
+    <Compile Include="EtwListener.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,9 +126,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="RealTimeEWTListener\RealTimeEWTListener.vcxproj">
+    <ProjectReference Include="RealtimeETWListener\RealtimeETWListener.vcxproj">
       <Project>{081b5568-ec76-44f7-976f-8a6d9b3751ee}</Project>
-      <Name>RealTimeEWTListener</Name>
+      <Name>RealtimeETWListener</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

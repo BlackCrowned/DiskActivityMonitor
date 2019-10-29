@@ -168,8 +168,8 @@ namespace DiskActivityMonitor
             InitGUI();
             lstDiskEventLog.DoubleBuffered(true);
 
-            Ewt.genRTL(out _rtlHandle);
-            if (Ewt.rtlStartTrace(_rtlHandle) != 0)
+            EtwListener.genRTL(out _rtlHandle);
+            if (EtwListener.rtlStartTrace(_rtlHandle) != 0)
             {
                 var result = MessageBox.Show("Failed to open event trace.", "Critical Failure", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
                 if (result == DialogResult.Retry)
@@ -210,12 +210,12 @@ namespace DiskActivityMonitor
             Properties.Settings.Default.listView1Header6_Width = columnHeader6.Width;
             Properties.Settings.Default.listView1Header7_Width = columnHeader7.Width;
             Properties.Settings.Default.Save();
-            Ewt.deleteRTL(ref _rtlHandle);
+            EtwListener.deleteRTL(ref _rtlHandle);
         }
 
         private void StopEventHandling()
         {
-            Ewt.rtlStopConsumption(_rtlHandle);
+            EtwListener.rtlStopConsumption(_rtlHandle);
             ConsumerClass.EventReceived -= HandleDiskEvents;
             _updateListView1Timer?.Stop();
             _updateTotalTimeRunningTimer?.Stop();
@@ -448,7 +448,7 @@ namespace DiskActivityMonitor
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Ewt.rtlStartConsumption(_rtlHandle);
+            EtwListener.rtlStartConsumption(_rtlHandle);
 
             _updateTotalTimeRunningTimer?.Stop();
             _updateTotalTimeRunningTimer = new Timer(1000);
@@ -459,7 +459,7 @@ namespace DiskActivityMonitor
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Ewt.rtlStopConsumption(_rtlHandle);
+            EtwListener.rtlStopConsumption(_rtlHandle);
             _updateTotalTimeRunningTimer.Stop();
         }
 

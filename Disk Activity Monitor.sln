@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disk Activity Monitor", "Di
 		{081B5568-EC76-44F7-976F-8A6D9B3751EE} = {081B5568-EC76-44F7-976F-8A6D9B3751EE}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RealTimeEWTListener", "RealTimeEWTListener\RealTimeEWTListener.vcxproj", "{081B5568-EC76-44F7-976F-8A6D9B3751EE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RealTimeETWListener", "RealTimeETWListener\RealTimeETWListener.vcxproj", "{081B5568-EC76-44F7-976F-8A6D9B3751EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

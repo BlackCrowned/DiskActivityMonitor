@@ -51,7 +51,6 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.minimizeToTaskbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.monitorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -258,7 +257,6 @@
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.openToolStripMenuItem,
-            this.minimizeToTaskbarToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -292,12 +290,6 @@
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
-            // minimizeToTaskbarToolStripMenuItem
-            // 
-            this.minimizeToTaskbarToolStripMenuItem.Name = "minimizeToTaskbarToolStripMenuItem";
-            this.minimizeToTaskbarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.minimizeToTaskbarToolStripMenuItem.Text = "Minimize to Taskbar";
-            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
@@ -317,14 +309,14 @@
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -340,14 +332,14 @@
             // showConsoleToolStripMenuItem
             // 
             this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
-            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.showConsoleToolStripMenuItem.Text = "Show Console";
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
             // 
             // addSomeEntriesToolStripMenuItem
             // 
             this.addSomeEntriesToolStripMenuItem.Name = "addSomeEntriesToolStripMenuItem";
-            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addSomeEntriesToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.addSomeEntriesToolStripMenuItem.Text = "Add some Entries";
             this.addSomeEntriesToolStripMenuItem.Click += new System.EventHandler(this.addSomeEntriesToolStripMenuItem_Click);
             // 
@@ -421,7 +413,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtTotalRead;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripMenuItem minimizeToTaskbarToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;

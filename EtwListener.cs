@@ -63,7 +63,7 @@ namespace DiskActivityMonitor
     //        public uint LoggerNameOffset;
     //    }
 
-    public static class Ewt
+    public static class EtwListener
     {
         //public static readonly string KERNEL_LOGGER_NAME = "NT Kernel Logger";
 
@@ -72,19 +72,19 @@ namespace DiskActivityMonitor
         //[DllImport("sechost.dll")]
         //public static extern ulong StartStrace(out IntPtr sessionHandle, [In] string sessionName, ref EventTraceProperties properties);
 
-        [DllImport("RealTimeEWTListener.dll", EntryPoint="genRTL", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("RealTimeETWListener.dll", EntryPoint="genRTL", CallingConvention = CallingConvention.Cdecl)]
         public static extern void genRTL(out IntPtr handle);
 
-        [DllImport("RealTimeEWTListener.dll", EntryPoint = "deleteRTL", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("RealTimeETWListener.dll", EntryPoint = "deleteRTL", CallingConvention = CallingConvention.Cdecl)]
         public static extern void deleteRTL(ref IntPtr handle);
 
-        [DllImport("RealTimeEWTListener.dll", EntryPoint = "rtlStartTrace", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("RealTimeETWListener.dll", EntryPoint = "rtlStartTrace", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint rtlStartTrace([In] IntPtr handle);
 
-        [DllImport("RealTimeEWTListener.dll", EntryPoint = "rtlStartConsumption", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("RealTimeETWListener.dll", EntryPoint = "rtlStartConsumption", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint rtlStartConsumption([In] IntPtr handle);
 
-        [DllImport("RealTimeEWTListener.dll", EntryPoint = "rtlStopConsumption", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("RealTimeETWListener.dll", EntryPoint = "rtlStopConsumption", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint rtlStopConsumption([In] IntPtr handle);
     }
 }
